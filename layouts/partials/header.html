@@ -17,13 +17,15 @@
     <h2 class="offscreen">Main Menu</h2>
     <ul class="menu-list">
       {{ range .Site.Menus.main }}
+        {{ $isActive := false }}
         {{ $encodedURL := htmlEscape .URL }}
-        {{ $relPermalink := $.RelPermalink }}
-        {{ if gt (len $relPermalink) 1 }}
-          {{ $relPermalink = strings.TrimSuffix "/" $relPermalink}}
-        {{end}}
+        {{ if and (eq (len $encodedURL) 1) (eq $encodedURL $.RelPermalink) }}
+          {{ $isActive = true }}
+        {{ else if and (gt (len $encodedURL) 1) (strings.Contains $.RelPermalink $encodedURL) }}
+          {{ $isActive = true }}
+        {{ end }}
         <li class="menu-item
-          {{ if eq $encodedURL $relPermalink }} is-active{{ end }}">
+          {{ if eq $isActive true }} is-active{{ end }}">
           <a href="{{ .URL }}">{{ .Name }}</a>
         </li>
       {{ end }}
