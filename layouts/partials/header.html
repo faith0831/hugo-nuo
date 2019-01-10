@@ -16,14 +16,14 @@
   <nav class="site-menu collapsed">
     <h2 class="offscreen">Main Menu</h2>
     <ul class="menu-list">
-      {{ $type := .Type }}
-      {{ $kind := .Kind }}
-      {{ $currentPage := . }}
       {{ range .Site.Menus.main }}
+        {{ $encodedURL := htmlEscape .URL }}
+        {{ $relPermalink := $.RelPermalink }}
+        {{ if gt (len $relPermalink) 1 }}
+          {{ $relPermalink = strings.TrimSuffix "/" $relPermalink}}
+        {{end}}
         <li class="menu-item
-          {{ if or ($currentPage.IsMenuCurrent "main" .) ($currentPage.HasMenuCurrent "main" .) }} is-active{{ end }}
-          {{ if and (eq .Identifier "tags") (eq $kind "taxonomy") }} is-active{{ end }}
-          {{ if and (eq .Identifier "home") (eq $type "post") }} is-active{{ end }}">
+          {{ if eq $encodedURL $relPermalink }} is-active{{ end }}">
           <a href="{{ .URL }}">{{ .Name }}</a>
         </li>
       {{ end }}
